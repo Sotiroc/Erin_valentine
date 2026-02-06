@@ -27,7 +27,7 @@ interface LoveLetterProps {
 export function LoveLetter({ onYes }: LoveLetterProps) {
   const [show, setShow] = useState(false)
   const [noCount, setNoCount] = useState(0)
-  const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
+  const [noButtonPosition, setNoButtonPosition] = useState<{ x: number; y: number } | null>(null)
 
   const yesButtonScale = Math.min(1 + noCount * 0.12, 2.2)
   const noButtonText = noCount === 0 ? noMessages[0] : noMessages[((noCount - 1) % (noMessages.length - 1)) + 1]
@@ -39,17 +39,16 @@ export function LoveLetter({ onYes }: LoveLetterProps) {
   }, [])
 
   const moveNoButton = () => {
-    // Clamp to viewport so the button never flies off screen
-    const btnWidth = 200
-    const btnHeight = 56
-    const padding = 16
-    const maxX = (window.innerWidth - btnWidth) / 2 - padding
-    const maxY = (window.innerHeight - btnHeight) / 2 - padding
-    const clampedMaxX = Math.max(40, maxX)
-    const clampedMaxY = Math.max(40, maxY)
+    const padding = 24
+    // The button has max-width capped to viewport, so use a generous
+    // width matching that cap to guarantee it stays fully visible
+    const btnWidth = Math.min(350, window.innerWidth - padding * 2)
+    const btnHeight = 60
 
-    const newX = (Math.random() - 0.5) * clampedMaxX * 2
-    const newY = (Math.random() - 0.5) * clampedMaxY * 2
+    const availableX = Math.max(0, window.innerWidth - btnWidth - padding * 2)
+    const availableY = Math.max(0, window.innerHeight - btnHeight - padding * 2)
+    const newX = padding + Math.random() * availableX
+    const newY = padding + Math.random() * availableY
     setNoButtonPosition({ x: newX, y: newY })
     setNoCount((prev) => prev + 1)
   }
@@ -82,44 +81,36 @@ export function LoveLetter({ onYes }: LoveLetterProps) {
           <div className="px-6 md:px-10 py-6 md:py-8 letter-scroll max-h-[60vh] overflow-y-auto">
             <div className="text-center space-y-5">
               <h2 className="font-script text-3xl md:text-4xl text-primary">
-                My Dearest Erin,
+                Hey You
               </h2>
 
               <div className="space-y-4 text-foreground/85 text-base md:text-lg leading-relaxed font-light">
                 <p>
-                  From the very first moment I met you, I knew there was something
-                  extraordinary about you. Your smile has this way of lighting up
-                  an entire room, and your laugh is the kind of melody that I never
-                  want to stop hearing.
+                  I can’t believe how much has changed in such a short time.
+                  A month ago you packed up your life, came down from Joburg,
+                  and now we’re here, living our best lives in Durban.
                 </p>
 
                 <p>
-                  Every day with you feels like a gift I didn&apos;t know I deserved.
-                  You have this incredible ability to make the ordinary feel magical,
-                  and the simplest moments with you become my favorite memories.
-                  Whether we&apos;re talking for hours or just sitting in comfortable
-                  silence, everything feels right when I&apos;m with you.
+                  Waking up next to you, doing life side by side,
+                  and turning everyday moments into something special
+                  has taught me so much about you
+                  and about us.
                 </p>
 
                 <p>
-                  You are my favorite person to talk to, my favorite person to laugh with,
-                  and my favorite person to simply be around. You make me want to be
-                  the best version of myself, and I hope I can make you even half as
-                  happy as you make me.
+                  You’re a massive a weirdo, into strange, loud, obnoxious, funny-tasting things,
+                  and yet I’m still so madly in love with you
+                  (even more than coconut water).
                 </p>
 
                 <p>
-                  I love the way your eyes light up when you talk about the things
-                  you&apos;re passionate about. I love how kind and thoughtful you are
-                  with everyone around you. I love every little thing about you,
-                  even the things you might not love about yourself.
+                  Thank you for choosing me,
+                  for taking this leap with me,
+                  and for making our place feel like home already.
                 </p>
 
                 <p>
-                  On this Valentine&apos;s Day, I want you to know that you are my
-                  favorite person, my best adventure, my greatest blessing, and
-                  the love of my life. There is no one else I would rather share
-                  this journey with.
                 </p>
               </div>
 
@@ -137,7 +128,7 @@ export function LoveLetter({ onYes }: LoveLetterProps) {
                 </p>
                 <HeartIcon className="w-6 h-6 text-primary mx-auto my-1 animate-pulse-heart" />
                 <p className="font-script text-2xl text-primary">
-                  Forever Yours
+                  Seth Sotiralis
                 </p>
               </div>
             </div>
@@ -169,10 +160,14 @@ export function LoveLetter({ onYes }: LoveLetterProps) {
             className="px-8 py-4 text-lg font-semibold rounded-full
                        bg-white text-foreground/60 border-2 border-foreground/15
                        hover:bg-secondary transition-colors duration-200"
-            style={{
-              transform: `translate(${noButtonPosition.x}px, ${noButtonPosition.y}px)`,
-              transition: "transform 0.2s ease-out",
-            }}
+            style={noButtonPosition ? {
+              position: "fixed",
+              left: noButtonPosition.x,
+              top: noButtonPosition.y,
+              maxWidth: "calc(100vw - 48px)",
+              zIndex: 50,
+              transition: "left 0.2s ease-out, top 0.2s ease-out",
+            } : undefined}
           >
             {noButtonText}
           </button>
