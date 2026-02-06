@@ -76,10 +76,10 @@ export function CelebrationScreen() {
 
           <div className="space-y-4">
             <p className="text-2xl md:text-3xl text-foreground font-medium">
-              You made me the happiest person!
+              Fuck yeh!
             </p>
             <p className="text-muted-foreground text-lg md:text-xl">
-              Happy Valentine&apos;s Day, Erin!
+              Thought you'd say yes
             </p>
             <p className="text-muted-foreground text-base">
               Can&apos;t wait to spend it with you
