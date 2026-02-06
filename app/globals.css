@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 350 100% 97%;
+    --foreground: 350 30% 15%;
+    --primary: 350 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 350 40% 93%;
+    --secondary-foreground: 350 30% 20%;
+    --muted: 350 30% 90%;
+    --muted-foreground: 350 20% 45%;
+    --accent: 20 90% 65%;
+    --accent-foreground: 350 30% 20%;
+    --border: 350 30% 85%;
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[hsl(var(--border))];
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Scrollbar styling for the letter */
+.letter-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.letter-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb {
+  background: hsl(350 60% 80%);
+  border-radius: 3px;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb:hover {
+  background: hsl(350 60% 70%);
+}
